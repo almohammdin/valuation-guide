@@ -83,7 +83,7 @@ p{margin:0 0 12px}
 .ds-row{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(255,255,255,.10);padding-bottom:8px}
 .ds-row:last-of-type{border-bottom:0;padding-bottom:0}
 .ds-row small{color:#9fb0d0;font-size:12.5px}
-.ds-row b{font-size:17px;direction:ltr;font-variant-numeric:tabular-nums}
+.ds-row b{font-size:17px;direction:rtl;font-variant-numeric:tabular-nums}
 .ds-row b.gold{color:var(--gold)}
 
 
@@ -192,6 +192,38 @@ p{margin:0 0 12px}
 .flow-row.final{border-color:var(--gold);background:linear-gradient(180deg,#fffdf6,#fff)}
 .flow-row.final .amt{color:var(--gold2)}
 
+/* Collapsible (details) */
+details.fold{border:1px solid var(--line);border-radius:15px;background:#fff;margin-top:12px;overflow:hidden}
+details.fold>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px;font-weight:800;color:var(--blue);font-size:14.5px;background:linear-gradient(180deg,#fbfcff,#f6f8fc);user-select:none}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary .chev{margin-right:auto;width:22px;height:22px;border-radius:7px;background:#eef3fb;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;transition:transform .2s}
+details.fold[open]>summary .chev{transform:rotate(90deg)}
+details.fold>summary .sum-tag{font-size:11.5px;font-weight:700;color:var(--gold2);background:#fdf6e3;border:1px solid #efe0b5;border-radius:999px;padding:3px 10px}
+details.fold .fold-body{padding:15px 16px}
+.fold-hint{display:flex;align-items:flex-start;gap:10px;background:#fdf9ef;border:1px solid #efe2bf;border-right:5px solid var(--gold);border-radius:12px;padding:12px 14px;font-size:12.5px;color:#5a4a1f;line-height:1.7;margin-bottom:10px}
+.fold-hint .ic{flex:0 0 20px;width:20px;height:20px;border-radius:50%;background:linear-gradient(140deg,#c9a84c,#a8862f);color:#1a1407;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px}
+
+/* FCF builder */
+.fcf-build{display:grid;gap:9px}
+.fcf-line{display:grid;grid-template-columns:34px 1fr 150px;gap:11px;align-items:center;background:#fbfcff;border:1px solid var(--line);border-radius:13px;padding:11px 13px}
+.fcf-line .op{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex:0 0 30px}
+.fcf-line .op.plus{background:#eaf6f0;color:var(--green)}
+.fcf-line .op.minus{background:#fdecea;color:var(--red)}
+.fcf-line .l-txt b{display:block;font-size:13.5px;color:var(--ink)}
+.fcf-line .l-txt span{display:block;font-size:11.5px;color:var(--muted);line-height:1.5}
+.fcf-line input{text-align:left;direction:ltr}
+.fcf-out{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px;padding:14px 16px;border-radius:14px;background:linear-gradient(140deg,#0a0e1a,#122046);color:#fff}
+.fcf-out .lab b{display:block;font-size:14px}
+.fcf-out .lab span{display:block;font-size:11.5px;color:#9fb0d0}
+.fcf-out .val{font-weight:900;font-size:22px;color:var(--gold);direction:rtl;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fcf-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
+.fcf-actions button{border:0;border-radius:11px;padding:10px 15px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:.18s}
+.fcf-actions .primary{background:linear-gradient(140deg,#c9a84c,#a8862f);color:#1a1407}
+.fcf-actions .primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(201,168,76,.3)}
+.fcf-actions .ghost{background:#fbfcff;border:1px solid var(--line);color:#34405a}
+.fcf-applied{display:none;background:#f3fbf7;border:1px solid #cdeedf;border-right:5px solid var(--green);color:#12382b;border-radius:12px;padding:11px 13px;font-size:13px;margin-top:10px}
+.fcf-applied.show{display:block}
+
 /* Calculator */
 .calc-shell{display:grid;grid-template-columns:290px 1fr;gap:13px;margin-top:12px}
 .calc-side,.calc-main{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px}
@@ -224,14 +256,20 @@ input[type=range].gold::-moz-range-thumb{background:linear-gradient(140deg,#c9a8
 .result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
 .result{border:1px solid var(--line);border-radius:14px;padding:13px;background:linear-gradient(180deg,#fff,#fbfcff)}
 .result small{display:block;color:var(--muted);font-size:12px;margin-bottom:2px}
-.result strong{display:block;color:var(--blue);font-size:22px;line-height:1.25;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.result strong{display:block;color:var(--blue);font-size:22px;line-height:1.25;direction:rtl;text-align:right;font-variant-numeric:tabular-nums}
 .result span{display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:5px}
 .dcf-extra{margin-top:12px;display:none}.dcf-extra.show{display:block}
 .range-panel{background:linear-gradient(160deg,#0a0e1a,#122046);color:#fff;border-radius:15px;padding:16px}
+.rp-title{font-size:13px;font-weight:800;color:var(--gold);margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.rp-title:before{content:"";width:14px;height:14px;border-radius:4px;background:var(--gold);flex:0 0 14px}
+.rp-hero{text-align:center;padding:6px 6px 14px;margin-bottom:12px;border-bottom:1px dashed rgba(201,168,76,.35)}
+.rp-hero-lab{display:block;font-size:12.5px;color:#9fb0d0;font-weight:700;margin-bottom:6px}
+.rp-hero b{display:block;font-size:34px;line-height:1.15;font-weight:900;color:var(--gold);direction:rtl;font-variant-numeric:tabular-nums}
+@media(max-width:860px){.rp-hero b{font-size:28px}}
 .rp-range{display:flex;justify-content:space-between;gap:9px}
 .rp-range div{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:11px;padding:9px 10px;text-align:center}
 .rp-range small{display:block;font-size:11px;color:#9fb0d0;margin-bottom:3px}
-.rp-range b{font-size:14px;color:#fff;direction:ltr;font-variant-numeric:tabular-nums}.rp-range .mid b{color:var(--gold)}
+.rp-range b{font-size:14px;color:#fff;direction:rtl;font-variant-numeric:tabular-nums}.rp-range .mid b{color:var(--gold)}
 .chart-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:11px}
 .chart-card h3{margin:0 0 4px;font-size:14px;color:var(--blue)}
 .chart-legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-bottom:6px}
@@ -304,13 +342,13 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
 </div>
 
 <header class="hero">
-  <div class="eyebrow">ملف تمهيدي + حاسبة مبسطة</div>
-  <h1>كيف تُفهم قيمة الشركة وترفع جاهزيتها قبل دخول مستثمر؟</h1>
+  <div class="eyebrow">أداة استرشادية لفهم التقييم ورفع الجاهزية</div>
+  <h1>كم تساوي شركتك قبل دخول المستثمر؟</h1>
 </header>
 
 <nav class="nav">
   <a href="#uplift">رفع التقييم</a>
-  <a href="#fcf">النقد الحر</a>
+  <a href="#fcf">التدفق النقدي الحر</a>
   <a href="#methods">طرق التقييم</a>
   <a href="#calculator">الحاسبة</a>
   <a href="#risk">تبسيط المخاطر</a>
@@ -319,8 +357,8 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
 </nav>
 
 <div class="grid">
-  <div class="metric"><strong>أرقام نظيفة</strong><span>أسرع طريق لمنع تخفيض السعر بسبب الشك.</span></div>
-  <div class="metric"><strong>ربح متكرر</strong><span>المستثمر يدفع أكثر عندما يثق أن الربح سيستمر.</span></div>
+  <div class="metric"><strong>أرقام واضحة</strong><span>أسرع طريق لمنع تخفيض السعر بسبب الشك.</span></div>
+  <div class="metric"><strong>ربح مستدام</strong><span>المستثمر يدفع أكثر عندما يثق أن الربح سيستمر.</span></div>
   <div class="metric"><strong>إدارة مستقلة</strong><span>كلما قل الاعتماد على المالك، قل خصم المخاطر.</span></div>
   <div class="metric"><strong>خطة نمو</strong><span>النمو يرفع التقييم فقط إذا كان مثبتاً وممولاً.</span></div>
 </div>
@@ -336,7 +374,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
   <table class="table">
     <thead><tr><th>الخطوة</th><th>ما المطلوب عملياً؟</th><th>كيف ترفع التقييم؟</th></tr></thead>
     <tbody>
-      <tr><td><b>تنظيف القوائم</b></td><td>مبيعات شهرية، مصروفات واضحة، مطابقات بنكية، فصل مصروفات المالك.</td><td>تدعم مكرر ربح أعلى لأنها تقلل الشك.</td></tr>
+      <tr><td><b>تحسين القوائم</b></td><td>مبيعات شهرية، مصروفات واضحة، مطابقات بنكية، فصل مصروفات المالك.</td><td>تدعم مكرر ربح أعلى لأنها تقلل الشك.</td></tr>
       <tr><td><b>تعريف الربح وراتب المالك</b></td><td>نحدد الربح المستخدم في التقييم، ثم نعامل راتب المالك كراتب عادل لوظيفة إدارية حقيقية. إذا كان يسحب أكثر من السوق نضيف الفرق للربح، وإذا كان يسحب أقل أو يعمل بلا راتب نخصم الراتب العادل.</td><td>يظهر الربح الحقيقي للشركة كما لو كانت تدار بمدير محترف، وهذا يجعل التقييم أعدل وأسهل في الدفاع عنه.</td></tr>
       <tr><td><b>ربحية كل وحدة</b></td><td>لكل فرع/وحدة: مبيعات، إيجار، عمالة، مواد، ربح.</td><td>تثبت أن النمو ليس صدفة، وأن الفروع الجديدة قابلة للقياس.</td></tr>
       <tr><td><b>تفويض الإدارة</b></td><td>مدير تشغيل، مدير مالي، صلاحيات مكتوبة، تقارير شهرية.</td><td>تقلل خصم الاعتماد على شخص واحد.</td></tr>
@@ -344,25 +382,64 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
       <tr><td><b>خطة استخدام المال</b></td><td>إذا دخل تمويل داخل الشركة (Cash-In)، أين سيذهب؟ فروع؟ أنظمة؟ تسويق؟ رأس مال عامل؟</td><td>تجعل دخول المستثمر مرتبطاً بنمو واضح لا ببيع حصة فقط.</td></tr>
     </tbody>
   </table>
-  <div class="ok"><b>مثال مبسط:</b><br>شركة ربحها التشغيلي <span class="num">4</span> مليون. إذا كانت الأرقام ضعيفة قد يضغط المستثمر إلى <span class="num">3×</span> = <span class="num">12</span> مليون. إذا كانت الأرقام نظيفة والإدارة واضحة والنمو مثبتاً، يصبح الدفاع عن <span class="num">5×</span> = <span class="num">20</span> مليون أقوى. الفرق ليس كلاماً؛ الفرق في الجاهزية.</div>
+  <div class="ok"><b>مثال مبسط:</b><br>شركة ربحها التشغيلي <span class="num">4</span> مليون. إذا كانت الأرقام ضعيفة قد يضغط المستثمر إلى <span class="num">3×</span> = <span class="num">12</span> مليون. إذا كانت الأرقام واضحة والإدارة واضحة والنمو مثبتاً، يصبح الدفاع عن <span class="num">5×</span> = <span class="num">20</span> مليون أقوى. الفرق ليس كلاماً؛ الفرق في الجاهزية.</div>
 </section>
 
 <section id="fcf">
-  <h2>ما هو النقد الحر؟</h2>
-  <p class="lead"><b>النقد الحر</b> هو المبلغ الذي يبقى فعلاً بعد تشغيل الشركة وتجديد ما تحتاجه. هذا هو الرقم الذي يهم في طريقة التدفقات النقدية المخصومة (DCF).</p>
+  <h2>ما هو التدفق النقدي الحر؟</h2>
+  <p class="lead"><b>التدفق النقدي الحر (Free Cash Flow – FCF)</b> هو النقد الذي يبقى فعلاً في يد الشركة بعد تشغيلها وبعد إنفاقها على ما تحتاجه من معدات وتجديدات. هو الرقم الذي يمكن توزيعه على الملاك أو سداد دين أو إعادة استثماره دون إضعاف الشركة، وهو الرقم الذي يهم في طريقة التدفقات النقدية المخصومة (DCF).</p>
   <div class="simple-flow">
-    <div class="flow-row"><div class="op plus">+</div><div class="txt"><b>نقد داخل من التشغيل</b><span>بعد دفع الرواتب، الإيجار، المواد، التشغيل اليومي.</span></div><div class="amt">200,000</div></div>
-    <div class="flow-row"><div class="op minus">−</div><div class="txt"><b>تجديدات ومعدات لا بد منها</b><span>ماكينة، صيانة، ديكور ضروري، أجهزة تشغيل.</span></div><div class="amt">− 50,000</div></div>
-    <div class="flow-row"><div class="op minus">−</div><div class="txt"><b>نقد محبوس في المخزون أو العملاء</b><span>بضاعة اشتريتها ولم تُبع، أو مبالغ لم تُحصّل بعد.</span></div><div class="amt">− 30,000</div></div>
-    <div class="flow-row final"><div class="op eq">=</div><div class="txt"><b>النقد الحر للسنة</b><span>هذا هو الرقم الأقرب لما يمكن توزيعه أو إعادة استثماره دون إضعاف الشركة.</span></div><div class="amt">120,000</div></div>
+    <div class="flow-row"><div class="op plus">+</div><div class="txt"><b>التدفق النقدي التشغيلي</b><span>صافي النقد الداخل من النشاط بعد الرواتب والإيجار والمواد والتشغيل اليومي.</span></div><div class="amt">200,000</div></div>
+    <div class="flow-row"><div class="op minus">−</div><div class="txt"><b>النفقات الرأسمالية (CAPEX)</b><span>شراء معدات، صيانة كبيرة، ديكور أو أجهزة لا بد منها لاستمرار العمل.</span></div><div class="amt">− 50,000</div></div>
+    <div class="flow-row"><div class="op minus">−</div><div class="txt"><b>الزيادة في رأس المال العامل</b><span>نقد ارتبط في بضاعة بالمخزون لم تُبع، أو في مبيعات على العملاء لم تُحصّل بعد.</span></div><div class="amt">− 30,000</div></div>
+    <div class="flow-row final"><div class="op eq">=</div><div class="txt"><b>التدفق النقدي الحر للسنة</b><span>هذا هو الرقم الأقرب لما يمكن توزيعه أو إعادة استثماره دون إضعاف الشركة.</span></div><div class="amt">120,000</div></div>
   </div>
-  <div class="note"><b>لغير المتخصص:</b> في حاسبة التدفقات النقدية المخصومة (DCF) أدخل تقدير النقد الحر لكل سنة. لا تدخل المبيعات. ولا تدخل ربحاً لا تستطيع تحويله إلى كاش.</div>
+  <div class="note">في حاسبة التدفقات النقدية المخصومة (DCF) أدخل تقدير التدفق النقدي الحر لكل سنة. لا تدخل المبيعات، ولا تدخل ربحاً دفترياً لا تستطيع تحويله إلى نقد فعلي.</div>
+
+  <details class="fold" id="fcfFold">
+    <summary>
+      احسب التدفق النقدي الحر خطوة بخطوة (اختياري)
+      <span class="sum-tag">يولّد رقماً جاهزاً</span>
+      <span class="chev">›</span>
+    </summary>
+    <div class="fold-body">
+      <div class="fold-hint"><span class="ic">i</span><span>الأصل أن تأخذ تفاصيل الأرقام من محاسبك بعد مناقشتها. وإن لم تكن متوفرة وأحببت تجربة الأداة، ابدأ من آخر سنة فعلية كأساس لتوقع السنوات القادمة. ويُنصح بالاستعانة بمحاسب متمكن لحساب رقم التدفق النقدي الحر، لأنه لا يعني المبيعات ولا الربح الدفتري، بل النقد المتوقع أن يتبقى بعد خصم ما تحتاجه الشركة للتشغيل والتجديدات والمخزون، وبعد استبعاد المبيعات التي لم تتحول إلى نقد فعلي (التحصيل).</span></div>
+
+      <div class="fcf-build">
+        <div class="fcf-line">
+          <div class="op plus">+</div>
+          <div class="l-txt"><b>التدفق النقدي التشغيلي</b><span>صافي النقد الذي دخل فعلاً من النشاط بعد الرواتب والإيجار والمواد والمصاريف اليومية.</span></div>
+          <input type="text" inputmode="decimal" class="num" id="fcf_op" value="200,000" oninput="fcfCalc()" onblur="formatInput(this)">
+        </div>
+        <div class="fcf-line">
+          <div class="op minus">−</div>
+          <div class="l-txt"><b>النفقات الرأسمالية (CAPEX)</b><span>شراء معدات، صيانة كبيرة، ديكور أو أجهزة تشغيل لا بد منها للاستمرار.</span></div>
+          <input type="text" inputmode="decimal" class="num" id="fcf_capex" value="50,000" oninput="fcfCalc()" onblur="formatInput(this)">
+        </div>
+        <div class="fcf-line">
+          <div class="op minus">−</div>
+          <div class="l-txt"><b>الزيادة في رأس المال العامل</b><span>نقد ارتبط في مخزون لم يُبع، أو في مبيعات على العملاء لم تُحصّل بعد. إذا لم يتغير، اتركه صفراً.</span></div>
+          <input type="text" inputmode="decimal" class="num" id="fcf_wc" value="30,000" oninput="fcfCalc()" onblur="formatInput(this)">
+        </div>
+        <div class="fcf-out">
+          <div class="lab"><b>التدفق النقدي الحر الناتج</b><span>الرقم القابل للنقل إلى الحاسبة.</span></div>
+          <div class="val" id="fcf_result">—</div>
+        </div>
+      </div>
+
+      <div class="fcf-actions">
+        <button type="button" class="primary" onclick="applyFcf()">انقل الرقم إلى الحاسبة (سنة 1)</button>
+        <button type="button" class="ghost" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">اذهب للحاسبة</button>
+      </div>
+      <div class="fcf-applied" id="fcfApplied"></div>
+    </div>
+  </details>
 </section>
 
 <section id="methods">
   <h2>أشهر طُرق التقييم</h2>
   <div class="methods">
-    <div class="method"><b>التدفقات النقدية المخصومة (DCF)</b><span>كم كاش ستنتج الشركة مستقبلاً؟ ثم نعيده لقيمة اليوم بعد خصم المخاطر.</span></div>
+    <div class="method"><b>التدفقات النقدية المخصومة (DCF)</b><span>كم تدفقاً نقدياً ستنتج الشركة مستقبلاً؟ ثم نعيده لقيمة اليوم بعد خصم المخاطر.</span></div>
     <div class="method"><b>مكرر الربح التشغيلي (EV/EBITDA)</b><span>الربح التشغيلي المعدل × مكرر مناسب. أسهل طريقة إذا كانت الأرباح موثقة.</span></div>
     <div class="method"><b>مكرر المبيعات (EV/Sales)</b><span>المبيعات × مكرر. مفيد إذا كان النمو قويّاً، لكنه خطير إذا كانت الهوامش ضعيفة.</span></div>
     <div class="method"><b>صافي الأصول المعدلة</b><span>الأصول ناقص الالتزامات. جيد كحد أدنى، لكنه قد يظلم الشركات ذات العلامة القوية.</span></div>
@@ -399,9 +476,13 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
       <div id="splitVisual"></div>
       <div id="dcfExtra" class="dcf-extra">
         <div class="range-panel">
+          <div class="rp-title">نطاق التقييم الاسترشادي</div>
+          <div class="rp-hero">
+            <span class="rp-hero-lab">التقييم الأساسي لحقوق الملكية</span>
+            <b id="rangeMid">—</b>
+          </div>
           <div class="rp-range">
             <div><small>متحفّظ</small><b id="rangeLow">—</b></div>
-            <div class="mid"><small>الأساسي</small><b id="rangeMid">—</b></div>
             <div><small>متفائل</small><b id="rangeHigh">—</b></div>
           </div>
         </div>
@@ -425,6 +506,14 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
     <div class="mid"><b>مخاطر متوسطة</b><span>الشركة جيدة لكن بعض الملفات ناقصة. التقييم يحتاج تحفظ.</span></div>
     <div class="bad"><b>مخاطر عالية</b><span>أرقام غير واضحة، اعتماد على المالك، عقود ضعيفة. الخصم يرتفع والقيمة تنخفض.</span></div>
   </div>
+  <details class="fold" id="riskFold">
+    <summary>
+      حرّك العوامل لتقدير معدل الخصم بنفسك (لفهم أعمق)
+      <span class="sum-tag">اختياري</span>
+      <span class="chev">›</span>
+    </summary>
+    <div class="fold-body">
+      <div class="fold-hint"><span class="ic">i</span><span>هذه أداة تقريبية لتقدير معدل الخصم. ابدأ من أساس الاستثمار الخاص، ثم أضف لكل عامل مخاطرة نسبة بسيطة حسب وضوح الشركة. كلما تحسّنت الحوكمة والأرقام انخفضت النسب، فينخفض معدل الخصم وترتفع القيمة. ليست مطلوبة لاستخدام الحاسبة، لكنها تساعدك على فهم من أين يأتي الرقم.</span></div>
   <div class="risk-card">
     <div class="risk-row"><div><b>أساس تقريبي للاستثمار الخاص</b><span>نبدأ منه ثم نضيف مخاطر الشركة.</span></div><input type="range" id="rb" min="8" max="18" value="12" step="0.5"><span class="rv" id="rbv">12%</span></div>
     <div class="risk-row"><div><b>غموض الأرقام</b><span>ينخفض إذا وجدت قوائم شهرية ومطابقات بنكية.</span></div><input type="range" id="r1b" min="0" max="5" value="3" step="0.5"><span class="rv" id="r1bv">3%</span></div>
@@ -434,14 +523,17 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
     <div class="risk-row"><div><b>تقلب القطاع والكاش</b><span>ينخفض إذا كانت السيولة والمخزون والديون تحت السيطرة.</span></div><input type="range" id="r5b" min="0" max="5" value="1" step="0.5"><span class="rv" id="r5bv">1%</span></div>
     <div class="risk-total"><span>معدل الخصم الاسترشادي</span><b id="riskTotal">23%</b></div>
   </div>
+    </div>
+  </details>
   <div class="ok"><b>تنويه:</b><br>الحوكمة، القوائم، العقود، وفصل الصلاحيات لا ترفع التقييم بكلمة مباشرة. لكنها تؤثر إيجاباً على النمو والاستدامة وتخفض المخاطر في الوقت نفسه. وعندما تتحسن قابلية النمو وينخفض معدل الخصم أو يزيد المكرر، ترتفع القيمة.</div>
   <div class="note">عند تعديل المخاطر هنا، إذا كنت في طريقة التدفقات النقدية المخصومة (DCF) سيتم تحديث معدل الخصم تلقائياً في الحاسبة.</div>
 </section>
 
 <section id="steps">
-  <h2>توجيهات قبل التفاوض</h2>
+  <h2>توجيهات قبل التفاوض مع المستثمر أو المشتري</h2>
+  <p class="lead">المقصود هنا التفاوض عند دخول مستثمر شريك أو بيع حصة من الشركة. جهّز هذه النقاط قبل الجلوس على الطاولة حتى تتفاوض من موقع قوة لا من موقع ردّ فعل.</p>
   <div class="steps">
-    <div class="step"><b>تنظيف الأرقام</b><span>جهز مبيعات ومصروفات آخر 24 شهراً، افصل المصاريف الشخصية، وحدد الربح التشغيلي بوضوح.</span></div>
+    <div class="step"><b>تحسين الأرقام</b><span>جهز مبيعات ومصروفات آخر 24 شهراً، افصل المصاريف الشخصية، وحدد الربح التشغيلي بوضوح.</span></div>
     <div class="step"><b>إثبات التشغيل</b><span>ربحية كل فرع أو وحدة، ومؤشرات التشغيل، والهدر، والعمالة، والإيجارات، وأداء الفروع الجديدة.</span></div>
     <div class="step"><b>تجهيز ملف المستثمر</b><span>قصة الاستثمار، وخطة استخدام Cash-In، وملف فحص، ونطاق تقييم بثلاث طرق، وشروط حماية المالك.</span></div>
   </div>
@@ -525,14 +617,14 @@ const methods={
   ['multiple','مكرر المبيعات',1.2,'يتأثر بالهامش والنمو وقوة العلامة.'],
   ['debt','صافي الدين',0,'الديون ناقص النقد.']]
  },
- dcf:{title:'التدفقات النقدية المخصومة (DCF)',short:'للنقد المستقبلي',note:'نقد السنوات القادمة يُعاد لقيمة اليوم بعد خصم المخاطر. أدخل النقد الحر لا المبيعات.',hint:'ابدأ بأرقام متحفظة. هذه الطريقة حساسة جداً للافتراضات.',fields:[
-  ['f1','النقد الحر سنة 1',800000,'ما يبقى بعد التشغيل والتجديدات ورأس المال العامل.'],
-  ['f2','النقد الحر سنة 2',950000,'أدخل كاش قابل للتوزيع أو إعادة الاستثمار.'],
-  ['f3','النقد الحر سنة 3',1100000,'لا تضع رقماً لا تستطيع تفسيره.'],
-  ['f4','النقد الحر سنة 4',1300000,'اربطه بخطة نمو واقعية.'],
-  ['f5','النقد الحر سنة 5',1500000,'آخر سنة قبل القيمة النهائية.'],
+ dcf:{title:'التدفقات النقدية المخصومة (DCF)',short:'للنقد المستقبلي',note:'تدفقات السنوات القادمة تُعاد لقيمة اليوم بعد خصم المخاطر. أدخل التدفق النقدي الحر لا المبيعات.',hint:'ابدأ بأرقام متحفظة. هذه الطريقة حساسة جداً للافتراضات.',fields:[
+  ['f1','التدفق النقدي الحر سنة 1',800000,'ما يبقى من نقد فعلي بعد التشغيل والنفقات الرأسمالية ورأس المال العامل.'],
+  ['f2','التدفق النقدي الحر سنة 2',950000,'أدخل نقداً قابلاً للتوزيع أو إعادة الاستثمار.'],
+  ['f3','التدفق النقدي الحر سنة 3',1100000,'لا تضع رقماً لا تستطيع تفسيره.'],
+  ['f4','التدفق النقدي الحر سنة 4',1300000,'اربطه بخطة نمو واقعية.'],
+  ['f5','التدفق النقدي الحر سنة 5',1500000,'آخر سنة قبل القيمة النهائية.'],
   ['discount','معدل الخصم %',23,'خصم المخاطر. إذا كانت الشركة أوضح وأقل اعتماداً على المالك ينخفض.','slider',8,40,0.5],
-  ['growth','نمو نهائي %',4,'نمو طويل الأجل بعد السنة الخامسة. اجعله محافظاً.','slider',0,8,0.5],
+  ['growth','النمو طويل الأجل بعد سنة 5 %',4,'هذا ليس نمو السنوات الخمس التي أدخلتها، بل تقدير لنمو الشركة الدائم بعد آخر سنة (للقيمة النهائية). لا يلزم أن تنمو تدفقاتك الخمس بنفس النسبة. اجعله محافظاً وقريباً من نمو الاقتصاد (مثلاً 2-4%).','slider',0,8,0.5],
   ['debt','صافي الدين',0,'يُخصم للوصول إلى حقوق الملكية.']]
  },
  assets:{title:'صافي الأصول المعدلة',short:'حد أدنى تقريبي',note:'حقوق الملكية = الأصول العادلة − الالتزامات + تعديل حذر لقيمة العلامة.',hint:'مفيد كحد أدنى، لكنه لا يلتقط دائماً قيمة النمو والعلامة.',fields:[
@@ -546,7 +638,7 @@ function normalizeDigits(s){return String(s||'').replace(/[٠-٩]/g,d=>'٠١٢٣
 function n(v){const x=parseFloat(normalizeDigits(v));return Number.isFinite(x)?x:0}
 function fmt(v){v=Number(v);if(!Number.isFinite(v))return'0';return Math.round(v).toLocaleString('en-US');}
 function formatInput(el){el.value=fmt(n(el.value));}
-function money(v){v=Number(v);if(!Number.isFinite(v))return'—';const sign=v<0?'-':'';const a=Math.abs(v);return sign+fmt(a)+' ريال';}
+function money(v){v=Number(v);if(!Number.isFinite(v))return'—';const sign=v<0?'-':'';const a=Math.abs(v);return '\u2068'+sign+fmt(a)+'\u2069 ريال';}
 function pct(x){return Number.isFinite(x)?(x*100).toFixed(1).replace(/\.0$/,'')+'%':'—'}
 function set(id,t){const el=document.getElementById(id);if(el)el.textContent=t}
 function warn(msg){const w=document.getElementById('warning');w.style.display=msg?'block':'none';w.textContent=msg||''}
@@ -601,7 +693,7 @@ function drawChart(fs,r,g){
   const res=dcfCalc(fs,r,g);const pvYears=fs.map((f,i)=>f/Math.pow(1+r,i+1));const pvtv=res?res.pvtv:0;
   const bars=[...pvYears,pvtv];const labels=['س1','س2','س3','س4','س5','نهائية'];const maxV=Math.max(...bars,1);
   const padL=6,padR=6,padB=20,padT=8;const bw=(W-padL-padR)/bars.length;
-  bars.forEach((v,i)=>{const h=Math.max(2,(v/maxV)*(H-padB-padT));const x=padL+i*bw+bw*0.18,y=H-padB-h,w=bw*0.64;
+  bars.forEach((v,i)=>{const h=Math.max(2,(v/maxV)*(H-padB-padT));const slot=bars.length-1-i;const x=padL+slot*bw+bw*0.18,y=H-padB-h,w=bw*0.64;
     ctx.fillStyle=i===5?'#c9a84c':'#2563a8';ctx.beginPath();ctx.roundRect(x,y,w,h,5);ctx.fill();
     ctx.fillStyle='#9aa3b2';ctx.font='11px "IBM Plex Sans Arabic",sans-serif';ctx.textAlign='center';ctx.fillText(labels[i],x+w/2,H-6);});
 }
@@ -683,7 +775,25 @@ function dsCalc(){
   else w.style.display='none';
   document.getElementById('ds_formula').innerHTML=`قيمة الشركة بعد الاستثمار (Post-Money) = قيمة الشركة قبل الاستثمار (Pre-Money) <span class="num">${money(pre)}</span> + المبلغ الداخل للشركة (Cash-In) <span class="num">${money(cin)}</span> = <span class="num">${money(post)}</span>. حصة المستثمر التقريبية = (المبلغ الداخل للشركة (Cash-In) + المبلغ الخارج للمالك / الملاك (Cash-Out)) ÷ قيمة الشركة بعد الاستثمار (Post-Money) = <span class="num">${pct(inv)}</span>.`;
 }
-document.addEventListener('DOMContentLoaded',function(){init();dsCalc();window.addEventListener('resize',()=>{if(current==='dcf')calculate();});});
+function fcfCalc(){
+  const op=n(document.getElementById('fcf_op').value);
+  const capex=n(document.getElementById('fcf_capex').value);
+  const wc=n(document.getElementById('fcf_wc').value);
+  const fcf=op-capex-wc;
+  set('fcf_result',money(fcf));
+  return fcf;
+}
+function applyFcf(){
+  const fcf=fcfCalc();
+  if(current!=='dcf')selectMethod('dcf');
+  values.dcf.f1=fcf;
+  renderFields();calculate();
+  const box=document.getElementById('fcfApplied');
+  box.classList.add('show');
+  box.innerHTML='تم نقل التدفق النقدي الحر '+money(fcf)+' إلى الحاسبة في خانة «التدفق النقدي الحر سنة 1». عدّل بقية السنوات في الحاسبة حسب خطة النمو.';
+  setTimeout(()=>document.getElementById('calculator').scrollIntoView({behavior:'smooth'}),250);
+}
+document.addEventListener('DOMContentLoaded',function(){init();dsCalc();fcfCalc();window.addEventListener('resize',()=>{if(current==='dcf')calculate();});});
 </script>
 </body>
 </html>
