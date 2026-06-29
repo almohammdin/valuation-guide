@@ -547,27 +547,6 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
             <div><small>متفائل</small><b id="rangeHigh">—</b></div>
           </div>
         </div>
-        <div class="chart-card value-source-card">
-          <h3>القيمة تتكون من جزأين</h3>
-          <p class="hint">الجزء الأول من تدفقات السنوات الخمس، والجزء الثاني من قيمة استمرار الشركة بعد السنة الخامسة.</p>
-          <div class="value-source">
-            <div>
-              <small>تدفقات السنوات الخمس</small>
-              <b id="pvYearsSimple">—</b>
-              <span id="pvShareSimple">—</span>
-            </div>
-            <div>
-              <small>قيمة ما بعد السنة الخامسة</small>
-              <b id="terminalSimple">—</b>
-              <span id="terminalShareSimple">—</span>
-            </div>
-          </div>
-          <div class="simple-split">
-            <i id="pvBar" class="pv" style="width:50%"></i>
-            <i id="tvBar" class="tv" style="width:50%"></i>
-          </div>
-          <div class="hint" id="tvShare" style="margin-top:8px"></div>
-        </div>
       </div>
       <div class="formula" id="formulaBox">—</div>
     </main>
@@ -890,7 +869,7 @@ function calculate(){
     const base=dcfCalc(fs,r,g),eq=base.ev-v.debt,tvShare=base.ev>0?base.pvtv/base.ev:0;
     result(money(base.ev),money(eq),pct(r),money(base.pvtv),
       {r1Label:'قيمة المنشأة',r2Label:'قيمة حقوق الملكية',r3Label:'معدل الخصم',r4Label:'حاضر القيمة النهائية',r1Note:'حاضر التدفقات + القيمة النهائية.',r2Note:'بعد خصم صافي الدين.',r3Note:'كلما ارتفع انخفض التقييم.',r4Note:'تمثّل '+pct(tvShare)+' من قيمة المنشأة.'},
-      `حاضر تدفقات 5 سنوات = <span class="num">${money(base.pv)}</span>، وحاضر القيمة النهائية = <span class="num">${money(base.pvtv)}</span>، ثم نخصم صافي الدين <span class="num">${money(v.debt)}</span> = <span class="num">${money(eq)}</span>.`);
+      `تم احتساب القيمة بناءً على التدفقات النقدية الحرة المتوقعة ومعدل الخصم والنمو النهائي، ثم خصم صافي الدين إن وجد.`);
     const cons=dcfCalc(fs,Math.min(0.45,r+0.04),Math.max(0,g-0.01));
     const opt=dcfCalc(fs,Math.max(g+0.01,r-0.04),Math.min(0.08,g+0.01));
     set('rangeLow',money(cons?cons.ev-v.debt:eq));set('rangeMid',money(eq));set('rangeMid2',money(eq));set('rangeHigh',money(opt?opt.ev-v.debt:eq));
@@ -1125,11 +1104,12 @@ async function exportValuationImage(){
     setShareStatus('جاري تجهيز الصورة...');
     fillShareCard();
     const canvas=await makeShareCanvas();
-    let blob=await canvasToBlob(canvas,'image/png');
-    if(!blob)blob=await canvasToBlob(canvas,'image/jpeg',0.92);
+    let blob=await canvasToBlob(canvas,'image/jpeg',0.90);
+    if(!blob)blob=await canvasToBlob(canvas,'image/png');
     if(!blob)throw new Error('تعذر تحويل الصورة');
-    const fileName='valuation-estimate-naif-almohammdi.png';
-    const file=(typeof File==='function')?new File([blob],fileName,{type:blob.type||'image/png'}):null;
+    const fileExt=(blob.type==='image/png')?'png':'jpg';
+    const fileName='valuation-estimate-naif-almohammdi.'+fileExt;
+    const file=(typeof File==='function')?new File([blob],fileName,{type:blob.type||'image/jpeg'}):null;
     if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
       try{
         await navigator.share({files:[file],title:'القيمة الاسترشادية للشركة',text:'ملخص استرشادي لفهم قيمة الشركة قبل التفاوض'});
