@@ -1,10 +1,11 @@
-name: Restore valuation formatting v2
+name: Restore valuation formatting
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/restore-formatting.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,35 +15,63 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Restore currency percentage and footer formatting
+      - name: Restore all requested formatting
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
 
-          marker = '<!-- unified-display-formatting -->'
+          # Keep the concise wording.
+          text = text.replace('هذه الأداة', 'الأداة')
+
+          # Replace the currency/percentage formatting functions directly.
+          text = re.sub(
+              r"function money\(v\)\{.*?\}\nfunction pct\(x\)\{.*?\}",
+              "function money(v){v=Number(v);if(!Number.isFinite(v))return'—';const sign=v<0?'-':'';const a=Math.abs(v);return '\\u2066⃁\\u00A0'+sign+fmt(a)+'\\u2069';}\nfunction pct(x){return Number.isFinite(x)?'\\u2066%\\u00A0'+(x*100).toFixed(1).replace(/\\.0$/,'')+'\\u2069':'—'}",
+              text,
+              count=1,
+              flags=re.S,
+          )
+
+          # Percentages created outside pct().
+          text = text.replace("n(val)+'%'", "'\\u2066%\\u00A0'+n(val)+'\\u2069'")
+          text = text.replace("val+'%'", "'\\u2066%\\u00A0'+val+'\\u2069'")
+          text = re.sub(r"([A-Za-z0-9_().]+)\+'% من القيمة'", r"'\\u2066%\\u00A0'+\1+'\\u2069 من القيمة'", text)
+          text = re.sub(r"([A-Za-z0-9_().]+)\+'%'", r"'\\u2066%\\u00A0'+\1+'\\u2069'", text)
+
+          # Static visible numbers and dynamically-added text: English digits, SAR and percent on the left.
+          marker = '<!-- unified-display-formatting-v2 -->'
           if marker not in text:
               formatter = r'''
-<!-- unified-display-formatting -->
+<!-- unified-display-formatting-v2 -->
+<style>
+.money-display,.percent-display{display:inline-flex;direction:ltr;unicode-bidi:isolate;align-items:baseline;gap:.22em;color:inherit;font:inherit}
+.money-display .sar,.percent-display .pct-sign{color:inherit;font:inherit}
+.footer-social-compact{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0 8px;direction:ltr}
+.footer-social-compact .handle{color:#e8d59a;font-weight:800;font-size:12px;margin-right:3px}
+.footer-social-compact a{width:30px;height:30px;border-radius:9px;border:1px solid rgba(201,168,76,.34);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;transition:.2s}
+.footer-social-compact a:hover{color:var(--gold);border-color:var(--gold);transform:translateY(-1px)}
+</style>
 <script>
 (() => {
-  const toEnglishDigits = value => String(value)
+  const englishDigits = value => String(value)
     .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
     .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
 
   const formatText = value => {
-    let text = toEnglishDigits(value);
-    text = text.replace(/(\d[\d,]*(?:\.\d+)?)\s*ريال/g, '\u2066⃁\u00A0$1\u2069');
-    text = text.replace(/(\d+(?:\.\d+)?)\s*%/g, '\u2066%\u00A0$1\u2069');
-    return text;
+    let t = englishDigits(value);
+    t = t.replace(/(\-?\d[\d,]*(?:\.\d+)?)\s*ريال/g, '⃁\u00A0$1');
+    t = t.replace(/(\-?\d+(?:\.\d+)?)\s*%/g, '%\u00A0$1');
+    return t;
   };
 
   const formatNode = node => {
     if (!node || node.nodeType !== Node.TEXT_NODE) return;
-    const parent = node.parentElement;
-    if (!parent || ['SCRIPT', 'STYLE', 'TEXTAREA'].includes(parent.tagName)) return;
+    const p = node.parentElement;
+    if (!p || ['SCRIPT','STYLE','TEXTAREA'].includes(p.tagName)) return;
     const next = formatText(node.nodeValue);
     if (next !== node.nodeValue) node.nodeValue = next;
   };
@@ -55,31 +84,63 @@ jobs:
 
   const start = () => {
     scan(document.body);
-    new MutationObserver(records => {
-      for (const record of records) {
-        if (record.type === 'characterData') formatNode(record.target);
-        for (const added of record.addedNodes) {
-          if (added.nodeType === Node.TEXT_NODE) formatNode(added);
-          else if (added.nodeType === Node.ELEMENT_NODE) scan(added);
-        }
+    document.querySelectorAll('input.num,input[inputmode="decimal"]').forEach(el => {
+      el.value = englishDigits(el.value);
+      el.addEventListener('input', () => { el.value = englishDigits(el.value); });
+    });
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+      const oldSocial = footer.querySelector('.footer-social');
+      if (oldSocial) oldSocial.remove();
+      if (!footer.querySelector('.footer-social-compact')) {
+        const social = document.createElement('div');
+        social.className = 'footer-social-compact';
+        social.innerHTML = `
+          <span class="handle">Almohammdin</span>
+          <a href="https://x.com/almohammdin" target="_blank" rel="noopener" aria-label="X">X</a>
+          <a href="https://www.linkedin.com/in/almohammdin" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+          <a href="https://www.snapchat.com/@almohammdin" target="_blank" rel="noopener" aria-label="Snapchat">⌁</a>
+          <a href="https://linktr.ee/almohammdin" target="_blank" rel="noopener" aria-label="Linktree">↗</a>`;
+        footer.insertBefore(social, footer.firstChild);
       }
-    }).observe(document.body, {subtree: true, childList: true, characterData: true});
+    }
+
+    new MutationObserver(records => {
+      for (const r of records) {
+        if (r.type === 'characterData') formatNode(r.target);
+        r.addedNodes.forEach(n => {
+          if (n.nodeType === Node.TEXT_NODE) formatNode(n);
+          else if (n.nodeType === Node.ELEMENT_NODE) scan(n);
+        });
+      }
+    }).observe(document.body,{subtree:true,childList:true,characterData:true});
   };
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once: true});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 })();
 </script>
 '''
               text = text.replace('</body>', formatter + '\n</body>')
 
-          text = text.replace('هذه الأداة', 'الأداة')
           path.write_text(text, encoding='utf-8')
           PY
-      - name: Commit restored formatting
+      - name: Validate calculator source
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          t=Path('index.html').read_text(encoding='utf-8')
+          required=['function loadSample()','function calculate()','function dcfCalc','⃁','footer-social-compact','الأداة استرشادية']
+          missing=[x for x in required if x not in t]
+          if missing: raise SystemExit('Missing: '+', '.join(missing))
+          if 'هذه الأداة' in t: raise SystemExit('Old wording remains')
+          PY
+      - name: Commit completed restoration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "fix: restore riyal percent and footer formatting"
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: restore riyal percent footer and sample"
           git push
