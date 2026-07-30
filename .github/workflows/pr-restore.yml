@@ -1,0 +1,54 @@
+name: PR restore valuation formatting
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Apply requested formatting
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          t=p.read_text(encoding='utf-8')
+          t=t.replace('هذه الأداة','الأداة')
+          t=re.sub(r"function money\(v\)\{.*?\}\nfunction pct\(x\)\{.*?\}","function money(v){v=Number(v);if(!Number.isFinite(v))return'—';const sign=v<0?'-':'';const a=Math.abs(v);return '\\u2066⃁\\u00A0'+sign+fmt(a)+'\\u2069';}\nfunction pct(x){return Number.isFinite(x)?'\\u2066%\\u00A0'+(x*100).toFixed(1).replace(/\\.0$/,'')+'\\u2069':'—'}",t,count=1,flags=re.S)
+          t=t.replace("n(val)+'%'","'\\u2066%\\u00A0'+n(val)+'\\u2069'")
+          t=t.replace("val+'%'","'\\u2066%\\u00A0'+val+'\\u2069'")
+          marker='<!-- unified-display-formatting-v3 -->'
+          if marker not in t:
+            block=r'''
+<!-- unified-display-formatting-v3 -->
+<style>
+.footer-social-compact{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0 8px;direction:ltr}.footer-social-compact .handle{color:#e8d59a;font-weight:800;font-size:12px;margin-right:3px}.footer-social-compact a{width:30px;height:30px;border-radius:9px;border:1px solid rgba(201,168,76,.34);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900}.footer-social-compact a:hover{color:var(--gold);border-color:var(--gold)}
+</style>
+<script>
+(()=>{const ed=v=>String(v).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));const ft=v=>ed(v).replace(/(\-?\d[\d,]*(?:\.\d+)?)\s*ريال/g,'⃁\u00A0$1').replace(/(\-?\d+(?:\.\d+)?)\s*%/g,'%\u00A0$1');const fn=n=>{if(!n||n.nodeType!==3)return;const p=n.parentElement;if(!p||['SCRIPT','STYLE','TEXTAREA'].includes(p.tagName))return;const x=ft(n.nodeValue);if(x!==n.nodeValue)n.nodeValue=x};const scan=r=>{const w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())fn(n)};const start=()=>{scan(document.body);document.querySelectorAll('input.num,input[inputmode="decimal"]').forEach(e=>{e.value=ed(e.value);e.addEventListener('input',()=>e.value=ed(e.value))});const f=document.querySelector('footer');if(f){const o=f.querySelector('.footer-social');if(o)o.remove();if(!f.querySelector('.footer-social-compact')){const s=document.createElement('div');s.className='footer-social-compact';s.innerHTML='<span class="handle">Almohammdin</span><a href="https://x.com/almohammdin" target="_blank" rel="noopener">X</a><a href="https://www.linkedin.com/in/almohammdin" target="_blank" rel="noopener">in</a><a href="https://www.snapchat.com/@almohammdin" target="_blank" rel="noopener">⌁</a><a href="https://linktr.ee/almohammdin" target="_blank" rel="noopener">↗</a>';f.insertBefore(s,f.firstChild)}}new MutationObserver(rs=>rs.forEach(r=>{if(r.type==='characterData')fn(r.target);r.addedNodes.forEach(n=>n.nodeType===3?fn(n):n.nodeType===1&&scan(n))})).observe(document.body,{subtree:true,childList:true,characterData:true})};document.readyState==='loading'?document.addEventListener('DOMContentLoaded',start,{once:true}):start()})();
+</script>
+'''
+            t=t.replace('</body>',block+'\n</body>')
+          p.write_text(t,encoding='utf-8')
+          PY
+      - name: Validate and commit
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          t=Path('index.html').read_text(encoding='utf-8')
+          for x in ['function loadSample()','function calculate()','function dcfCalc','⃁','footer-social-compact','الأداة استرشادية']:
+            assert x in t,x
+          assert 'هذه الأداة' not in t
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "fix: restore riyal percent footer and sample" && git push)
