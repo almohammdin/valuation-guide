@@ -1038,6 +1038,20 @@ function loadImageSafe(src){
     if(img.complete&&img.naturalWidth)resolve(img);
   });
 }
+
+function drawSvgPathIcon(ctx,path,cx,cy,size,mode='fill'){
+  const p=new Path2D(path);
+  ctx.save();
+  ctx.translate(cx-size/2,cy-size/2);
+  ctx.scale(size/24,size/24);
+  if(mode==='stroke'){
+    ctx.stroke(p);
+  }else{
+    ctx.fill(p);
+  }
+  ctx.restore();
+}
+
 async function makeShareCanvas(){
   const data=getShareData();
   const canvas=document.createElement('canvas');
@@ -1110,10 +1124,11 @@ async function makeShareCanvas(){
   ctx.beginPath();ctx.moveTo(94,1233);ctx.lineTo(108,1249);ctx.moveTo(108,1233);ctx.lineTo(94,1249);ctx.stroke();
   // LinkedIn
   ctx.font='900 17px Arial, sans-serif';ctx.textAlign='center';ctx.fillText('in',157,1247);
-  // Snapchat: simple ghost outline
-  ctx.beginPath();ctx.arc(213,1239,7,Math.PI,0);ctx.lineTo(220,1245);ctx.quadraticCurveTo(217,1247,216,1250);ctx.quadraticCurveTo(213,1248,210,1250);ctx.quadraticCurveTo(209,1247,206,1245);ctx.lineTo(206,1239);ctx.stroke();
-  // Linktree: trunk and branches
-  ctx.beginPath();ctx.moveTo(269,1231);ctx.lineTo(269,1252);ctx.moveTo(269,1237);ctx.lineTo(260,1229);ctx.moveTo(269,1237);ctx.lineTo(278,1229);ctx.moveTo(269,1243);ctx.lineTo(257,1234);ctx.moveTo(269,1243);ctx.lineTo(281,1234);ctx.stroke();
+  // Snapchat: use the same ADsChek SVG path
+  ctx.fillStyle='#fff';
+  drawSvgPathIcon(ctx,'M12 2.1c-3.1 0-5.2 2.5-5.2 5.7 0 .8.1 1.7.2 2.4-.4.2-1 .3-1.5.1-.8-.3-1.3 1-.5 1.5.4.3 1.1.5 1.5.7-.5 1.2-1.5 2.3-3.1 3-.6.3-.5 1.2.1 1.4 1 .4 2 .5 2.8.7.3.1.5.7.8 1.2.2.3.6.4 1 .3.8-.2 1.6-.5 2.9-.5s2.1.3 2.9.5c.4.1.8 0 1-.3.3-.5.5-1.1.8-1.2.8-.2 1.8-.3 2.8-.7.6-.2.7-1.1.1-1.4-1.6-.7-2.6-1.8-3.1-3 .4-.2 1.1-.4 1.5-.7.8-.5.3-1.8-.5-1.5-.5.2-1.1.1-1.5-.1.1-.7.2-1.6.2-2.4 0-3.2-2.1-5.7-5.2-5.7Z',213,1241,18,'fill');
+  // Linktree: use the same ADsChek SVG path
+  drawSvgPathIcon(ctx,'M13.736 5.852 17.644 2l1.92 1.92-3.852 3.736h5.644v2.736h-5.66l3.868 3.752-1.92 1.92-5.276-5.28-5.276 5.28-1.92-1.92 3.868-3.752H3.38V7.656h5.644L5.172 3.92 7.092 2l3.932 3.852V0h2.712v5.852ZM11.024 24v-8.604h2.712V24h-2.712Z',269,1241,20,'fill');
   return canvas;
 }
 async function exportValuationImage(){
