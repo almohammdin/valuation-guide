@@ -1,0 +1,87 @@
+name: Restore valuation formatting
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/restore-formatting.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore currency percentage and footer formatting
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          marker = '<!-- unified-display-formatting -->'
+          if marker not in text:
+              formatter = r'''
+<!-- unified-display-formatting -->
+<script>
+(() => {
+  const toEnglishDigits = value => String(value)
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+
+  const formatText = value => {
+    let text = toEnglishDigits(value);
+    text = text.replace(/(\d[\d,]*(?:\.\d+)?)\s*ريال/g, '\u2066⃁\u00A0$1\u2069');
+    text = text.replace(/(\d+(?:\.\d+)?)\s*%/g, '\u2066%\u00A0$1\u2069');
+    return text;
+  };
+
+  const formatNode = node => {
+    if (!node || node.nodeType !== Node.TEXT_NODE) return;
+    const parent = node.parentElement;
+    if (!parent || ['SCRIPT', 'STYLE', 'TEXTAREA'].includes(parent.tagName)) return;
+    const next = formatText(node.nodeValue);
+    if (next !== node.nodeValue) node.nodeValue = next;
+  };
+
+  const scan = root => {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) formatNode(node);
+  };
+
+  const start = () => {
+    scan(document.body);
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.type === 'characterData') formatNode(record.target);
+        for (const added of record.addedNodes) {
+          if (added.nodeType === Node.TEXT_NODE) formatNode(added);
+          else if (added.nodeType === Node.ELEMENT_NODE) scan(added);
+        }
+      }
+    }).observe(document.body, {subtree: true, childList: true, characterData: true});
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once: true});
+  else start();
+})();
+</script>
+'''
+              text = text.replace('</body>', formatter + '\n</body>')
+
+          # Preserve the requested simplified wording.
+          text = text.replace('هذه الأداة', 'الأداة')
+
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit restored formatting
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "fix: restore riyal percent and footer formatting"
+          git push
