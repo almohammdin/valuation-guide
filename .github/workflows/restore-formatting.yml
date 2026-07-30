@@ -1,4 +1,4 @@
-name: Restore valuation formatting
+name: Restore valuation formatting v2
 
 on:
   push:
@@ -73,9 +73,7 @@ jobs:
 '''
               text = text.replace('</body>', formatter + '\n</body>')
 
-          # Preserve the requested simplified wording.
           text = text.replace('هذه الأداة', 'الأداة')
-
           path.write_text(text, encoding='utf-8')
           PY
       - name: Commit restored formatting
