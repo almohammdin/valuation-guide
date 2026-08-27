@@ -1,0 +1,67 @@
+name: Fix FCF formula once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-fcf-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Correct FCF formula and explanation
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          replacements = [
+            (
+              '''    <div class="flow-row"><div class="op minus">−</div><div class="txt"><b>الزيادة في رأس المال العامل</b><span>نقد ارتبط في بضاعة بالمخزون لم تُبع، أو في مبيعات على العملاء لم تُحصّل بعد.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>− 30,000</span></div></div>\n''',
+              ''''''
+            ),
+            (
+              '''    <div class="flow-row final"><div class="op eq">=</div><div class="txt"><b>التدفق النقدي الحر للسنة</b><span>هذا هو الرقم الأقرب لما يمكن توزيعه أو إعادة استثماره دون إضعاف الشركة.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>120,000</span></div></div>''',
+              '''    <div class="flow-row final"><div class="op eq">=</div><div class="txt"><b>التدفق النقدي الحر للسنة</b><span>هذا هو الرقم الأقرب لما يمكن توزيعه أو إعادة استثماره دون إضعاف الشركة.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>150,000</span></div></div>'''
+            ),
+            (
+              '''  <div class="note">في حاسبة التدفقات النقدية المخصومة (DCF) أدخل تقدير التدفق النقدي الحر لكل سنة، لا تدخل المبيعات، ولا تدخل أرباحاً دفترية لا يمكن تحويلها إلى نقد فعلي.</div>''',
+              '''  <div class="note">إذا كان التدفق النقدي التشغيلي مأخوذاً من قائمة التدفقات النقدية، فهو يتضمن بالفعل أثر التغير في رأس المال العامل؛ لذلك لا يُطرح رأس المال العامل مرة أخرى. وفي حاسبة التدفقات النقدية المخصومة (DCF) أدخل تقدير التدفق النقدي الحر لكل سنة، لا تدخل المبيعات، ولا تدخل أرباحاً دفترية لا يمكن تحويلها إلى نقد فعلي.</div>'''
+            ),
+            (
+              '''        <div class="fcf-line">\n          <div class="op minus">−</div>\n          <div class="l-txt"><b>الزيادة في رأس المال العامل</b><span>نقد ارتبط في مخزون لم يُبع، أو في مبيعات على العملاء لم تُحصّل بعد. إذا لم يتغير، اتركه صفراً.</span></div>\n          <input type="text" inputmode="decimal" class="num" id="fcf_wc" value="30,000" oninput="fcfCalc()" onblur="formatInput(this)">\n        </div>\n''',
+              ''''''
+            ),
+            (
+              '''  const capex=n(document.getElementById('fcf_capex').value);\n  const wc=n(document.getElementById('fcf_wc').value);\n  const fcf=op-capex-wc;''',
+              '''  const capex=n(document.getElementById('fcf_capex').value);\n  const fcf=op-capex;'''
+            ),
+            (
+              '''ما يبقى من نقد فعلي بعد التشغيل والنفقات الرأسمالية ورأس المال العامل.''',
+              '''ما يبقى من نقد فعلي بعد التشغيل والنفقات الرأسمالية.'''
+            )
+          ]
+
+          for old, new in replacements:
+              count = s.count(old)
+              if count != 1:
+                  raise SystemExit(f'Expected exactly one match, found {count}: {old[:90]!r}')
+              s = s.replace(old, new, 1)
+
+          p.write_text(s, encoding='utf-8')
+      - name: Commit corrected page and remove one-time workflow
+        run: |
+          rm .github/workflows/fix-fcf-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/fix-fcf-once.yml
+          git commit -m "fix: correct free cash flow calculation"
+          git push
