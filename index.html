@@ -459,10 +459,9 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
   <div class="simple-flow">
     <div class="flow-row"><div class="op plus">+</div><div class="txt"><b>التدفق النقدي التشغيلي</b><span>صافي النقد الداخل من النشاط بعد الرواتب والإيجار والمواد والتشغيل اليومي.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>200,000</span></div></div>
     <div class="flow-row"><div class="op minus">−</div><div class="txt"><b>النفقات الرأسمالية (CAPEX)</b><span>شراء معدات، صيانة كبيرة، ديكور أو أجهزة لا بد منها لاستمرار العمل.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>− 50,000</span></div></div>
-    <div class="flow-row"><div class="op minus">−</div><div class="txt"><b>الزيادة في رأس المال العامل</b><span>نقد ارتبط في بضاعة بالمخزون لم تُبع، أو في مبيعات على العملاء لم تُحصّل بعد.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>− 30,000</span></div></div>
-    <div class="flow-row final"><div class="op eq">=</div><div class="txt"><b>التدفق النقدي الحر للسنة</b><span>هذا هو الرقم الأقرب لما يمكن توزيعه أو إعادة استثماره دون إضعاف الشركة.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>120,000</span></div></div>
+    <div class="flow-row final"><div class="op eq">=</div><div class="txt"><b>التدفق النقدي الحر للسنة</b><span>هذا هو الرقم الأقرب لما يمكن توزيعه أو إعادة استثماره دون إضعاف الشركة.</span></div><div class="amt"><span class="sar-symbol">⃁</span><span>150,000</span></div></div>
   </div>
-  <div class="note">في حاسبة التدفقات النقدية المخصومة (DCF) أدخل تقدير التدفق النقدي الحر لكل سنة، لا تدخل المبيعات، ولا تدخل أرباحاً دفترية لا يمكن تحويلها إلى نقد فعلي.</div>
+  <div class="note">إذا كان التدفق النقدي التشغيلي مأخوذاً من قائمة التدفقات النقدية، فهو يتضمن بالفعل أثر التغير في رأس المال العامل؛ لذلك لا يُطرح رأس المال العامل مرة أخرى. وفي حاسبة التدفقات النقدية المخصومة (DCF) أدخل تقدير التدفق النقدي الحر لكل سنة، لا تدخل المبيعات، ولا تدخل أرباحاً دفترية لا يمكن تحويلها إلى نقد فعلي.</div>
 
   <details class="fold" id="fcfFold">
     <summary>
@@ -482,11 +481,6 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin:24px 0 0;line-
           <div class="op minus">−</div>
           <div class="l-txt"><b>النفقات الرأسمالية (CAPEX)</b><span>شراء معدات، صيانة كبيرة، ديكور أو أجهزة تشغيل لا بد منها للاستمرار.</span></div>
           <input type="text" inputmode="decimal" class="num" id="fcf_capex" value="50,000" oninput="fcfCalc()" onblur="formatInput(this)">
-        </div>
-        <div class="fcf-line">
-          <div class="op minus">−</div>
-          <div class="l-txt"><b>الزيادة في رأس المال العامل</b><span>نقد ارتبط في مخزون لم يُبع، أو في مبيعات على العملاء لم تُحصّل بعد. إذا لم يتغير، اتركه صفراً.</span></div>
-          <input type="text" inputmode="decimal" class="num" id="fcf_wc" value="30,000" oninput="fcfCalc()" onblur="formatInput(this)">
         </div>
         <div class="fcf-out">
           <div class="lab"><b>التدفق النقدي الحر الناتج</b><span>الرقم القابل للنقل إلى الحاسبة.</span></div>
@@ -759,7 +753,7 @@ const methods={
   ['debt','صافي الدين',0,'الديون ناقص النقد.']]
  },
  dcf:{title:'التدفقات النقدية المخصومة (DCF)',short:'للنقد المستقبلي',note:'تدفقات السنوات القادمة تُعاد لقيمة اليوم بعد خصم المخاطر. أدخل التدفق النقدي الحر.',hint:'ابدأ بأرقام متحفظة. هذه الطريقة حساسة جداً للافتراضات.',fields:[
-  ['f1','التدفق النقدي الحر سنة 1',800000,'ما يبقى من نقد فعلي بعد التشغيل والنفقات الرأسمالية ورأس المال العامل.'],
+  ['f1','التدفق النقدي الحر سنة 1',800000,'ما يبقى من نقد فعلي بعد التشغيل والنفقات الرأسمالية.'],
   ['f2','التدفق النقدي الحر سنة 2',950000,'أدخل نقداً قابلاً للتوزيع أو إعادة الاستثمار.'],
   ['f3','التدفق النقدي الحر سنة 3',1100000,'لا تضع رقماً لا تستطيع تفسيره.'],
   ['f4','التدفق النقدي الحر سنة 4',1300000,'اربطه بخطة نمو واقعية.'],
@@ -938,8 +932,7 @@ function dsCalc(){
 function fcfCalc(){
   const op=n(document.getElementById('fcf_op').value);
   const capex=n(document.getElementById('fcf_capex').value);
-  const wc=n(document.getElementById('fcf_wc').value);
-  const fcf=op-capex-wc;
+  const fcf=op-capex;
   set('fcf_result',money(fcf));
   return fcf;
 }
